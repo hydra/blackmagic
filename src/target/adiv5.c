@@ -336,7 +336,7 @@ static void adiv5_component_probe(ADIv5_AP_t *ap, uint32_t addr)
 					break;
 				case aa_cortexa:
 					DEBUG("-> cortexa_probe\n");
-					cortexa_probe(ap, addr);
+					//cortexa_probe(ap, addr);
 					break;
 				default:
 					break;

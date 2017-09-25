@@ -46,7 +46,7 @@ struct command_s {
 static bool cmd_version(void);
 static bool cmd_help(target *t);
 
-static bool cmd_jtag_scan(target *t, int argc, char **argv);
+//static bool cmd_jtag_scan(target *t, int argc, char **argv);
 static bool cmd_swdp_scan(void);
 static bool cmd_targets(void);
 static bool cmd_morse(void);
@@ -65,7 +65,7 @@ static bool cmd_debug_bmp(target *t, int argc, const char **argv);
 const struct command_s cmd_list[] = {
 	{"version", (cmd_handler)cmd_version, "Display firmware version info"},
 	{"help", (cmd_handler)cmd_help, "Display help for monitor commands"},
-	{"jtag_scan", (cmd_handler)cmd_jtag_scan, "Scan JTAG chain for devices" },
+//	{"jtag_scan", (cmd_handler)cmd_jtag_scan, "Scan JTAG chain for devices" },
 	{"swdp_scan", (cmd_handler)cmd_swdp_scan, "Scan SW-DP for devices" },
 	{"targets", (cmd_handler)cmd_targets, "Display list of available targets" },
 	{"morse", (cmd_handler)cmd_morse, "Display morse error message" },
@@ -145,6 +145,7 @@ bool cmd_help(target *t)
 	return true;
 }
 
+/*
 static bool cmd_jtag_scan(target *t, int argc, char **argv)
 {
 	(void)t;
@@ -153,14 +154,14 @@ static bool cmd_jtag_scan(target *t, int argc, char **argv)
 	gdb_outf("Target voltage: %s\n", platform_target_voltage());
 
 	if (argc > 1) {
-		/* Accept a list of IR lengths on command line */
+		// Accept a list of IR lengths on command line
 		for (int i = 1; i < argc; i++)
 			irlens[i-1] = atoi(argv[i]);
 		irlens[argc-1] = 0;
 	}
 
 	if(connect_assert_srst)
-		platform_srst_set_val(true); /* will be deasserted after attach */
+		platform_srst_set_val(true); // will be deasserted after attach
 
 	int devs = -1;
 	volatile struct exception e;
@@ -185,6 +186,7 @@ static bool cmd_jtag_scan(target *t, int argc, char **argv)
 	morse(NULL, false);
 	return true;
 }
+*/
 
 bool cmd_swdp_scan(void)
 {

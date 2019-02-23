@@ -28,12 +28,22 @@
 #include "gpio.h"
 #include "timing.h"
 #include "timing_stm32.h"
+#include "version.h"
 
-#define PLATFORM_HAS_TRACESWO
-#define BOARD_IDENT             "Black Magic Probe (Baite)"
-#define BOARD_IDENT_DFU	        "Black Magic Probe (Upgrade) for Baite"
-#define BOARD_IDENT_UPD	        "Black Magic Probe (DFU Upgrade) for Baite"
-#define DFU_IDENT               "Black Magic Firmware Upgrade (Baite)"
+#include <libopencm3/cm3/common.h>
+#include <libopencm3/stm32/f1/memorymap.h>
+#include <libopencm3/usb/usbd.h>
+
+#ifdef ENABLE_DEBUG
+# define PLATFORM_HAS_DEBUG
+# define USBUART_DEBUG
+#endif
+
+#define BOARD_IDENT       "Black Magic Probe (Baite), (Firmware " FIRMWARE_VERSION ")"
+#define BOARD_IDENT_DFU   "Black Magic (Upgrade) for Baite, (Firmware " FIRMWARE_VERSION ")"
+#define BOARD_IDENT_UPD   "Black Magic (DFU Upgrade) for Baite, (Firmware " FIRMWARE_VERSION ")"
+#define DFU_IDENT         "Black Magic Firmware Upgrade (Baite)"
+
 #define UPD_IFACE_STRING        "@Internal Flash   /0x08000000/8*001Kg"
 
 /* Important pin mappings for Bait platform:
@@ -72,6 +82,9 @@
 #define LED_PIN			GPIO9
 #define LED_UART		LED_PIN
 #define LED_IDLE_RUN	LED_PIN
+
+#define PLATFORM_HAS_TRACESWO
+#define NUM_TRACE_PACKETS		(128)		/* This is an 8K buffer */
 
 #define TMS_SET_MODE() \
 	gpio_set_mode(TMS_PORT, GPIO_MODE_OUTPUT_50_MHZ, \
@@ -116,7 +129,13 @@
 #define TRACE_IRQ   NVIC_TIM3_IRQ
 #define TRACE_ISR   tim3_isr
 
-#define DEBUG(...)
+#ifdef ENABLE_DEBUG
+extern bool debug_bmp;
+int usbuart_debug_write(const char *buf, size_t len);
+# define DEBUG printf
+#else
+# define DEBUG(...)
+#endif
 
 #define SET_RUN_STATE(state)	{running_status = (state);}
 #define SET_IDLE_STATE(state)	{gpio_set_val(LED_PORT, LED_PIN, !state);}
@@ -125,7 +144,7 @@
 /* Use newlib provided integer only stdio functions */
 #define sscanf siscanf
 #define sprintf siprintf
-#define snprintf sniprintf
 #define vasprintf vasiprintf
+#define snprintf sniprintf
 
 #endif
